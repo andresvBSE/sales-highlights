@@ -5,6 +5,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# new
+NextSteps.txt
+
+
 # C extensions
 *.so
 
