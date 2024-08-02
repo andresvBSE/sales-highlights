@@ -1,0 +1,7 @@
+Improve format
+- Rounding numbers in cards
+- Better sns graph
+
+Include data of hihglihts
+- Create a dataset using chat gpt with a key that is the week number (suing mostly code from what i already did)
+- In gitignore include the api key
