@@ -10,24 +10,17 @@ from pathlib import Path
 # Load the data
 @st.cache
 def load_data():
-    DATA_FILENAME = Path(__file__).parent/'data/Walmart_Sales.csv'
+    DATA_FILENAME = Path(__file__).parent/'data/highlights.csv'
     df = pd.read_csv(DATA_FILENAME)
     
     df = df.query("Store<6") # only 5 stores
-    df["Date"] = pd.to_datetime(df['Date'], format="%d-%m-%Y")
+    print(df.info())
+    df["Date"] = pd.to_datetime(df['Date'], format="%Y-%m-%d")
     df["Date S F"] = df['Date'].dt.strftime("%Y-%m-%d")
+    df["Highlights"].fillna("", inplace=True)
     df.sort_values(by="Date", inplace=True)
     return df
 data = load_data()
-
-@st.cache
-def load_highlights_data():
-    DATA_FILENAME = Path(__file__).parent/'data/highlights.csv'
-    df = pd.read_csv(DATA_FILENAME)
-    return df
-data_hihglights = load_highlights_data()
-
-
 
 # Helper functions to calculate metrics
 def get_total_sales(data, week):
@@ -40,10 +33,7 @@ def calculate_sales_variation(current_sales, last_sales):
     return ((current_sales - last_sales) / last_sales) * 100 if last_sales != 0 else 0
 
 def get_weekly_highlights(data, week):
-    #try:
-        return data[data["Week"] == week]["Highlights"][0]
-    #except:
-    #    return "No data"
+        return data[data['Date S F'] == week]["Highlights"].values[0]
     
 
 # Get the list of available weeks
@@ -104,8 +94,8 @@ st.pyplot(plt)
 
 print(selected_week)
 
-if get_weekly_highlights(data_hihglights, selected_week):
-    highlights_text = get_weekly_highlights(data_hihglights, selected_week)
+if get_weekly_highlights(data, selected_week):
+    highlights_text = get_weekly_highlights(data, selected_week)
 else:
     highlights_text = "No additional information available."
 
