@@ -1,8 +1,8 @@
-# :earth_americas: GDP dashboard template
+# Dashboard with ChatGPT-generated highlights
 
 A simple Streamlit app that includes ChatGPT generated textual highlights for a demo dashboard of sales accross diferent stores.
 
-[![Test the this demo on ](https://highlightssalesdashboard.streamlit.app)
+[Test the this demo on streamlit](https://highlightssalesdashboard.streamlit.app)
 
 ## How It works?
 
@@ -24,7 +24,7 @@ Given a table like the next:
 The script is able to get highlights like: "Total sales decreased by $322,555.0 (4.84%). The decrease was driven mainly by a reduction of $97,713.0 (5.85%) in store 1."
 
 ## Data
-Walmart Sales data taken from  [![kaggle ](https://www.kaggle.com/datasets/mikhail1681/walmart-sales)
+Walmart Sales data taken from  [kaggle ](https://www.kaggle.com/datasets/mikhail1681/walmart-sales)
 
 
 ## Prerequisites
