@@ -73,6 +73,57 @@ class CreateTable:
 
 
 class CreateHighlights:
+    def __init__(self, text, model="gpt-4o-mini") -> None:
+        self.text = text
+        self.model = model
+        self.prompt = f"""
+            You will be provided with text delimited by triple quotes about sales in a retail store chain. You must
+            write a text with the next format:
+
+            - Total sales increased by (value $) (value %). The increase was driven mainly by an expansion of (value $) (value %) in the store X.
+
+            when total sales decreased, change the sense of the sentence:
+
+            \"\"\"{self.text}\"\"\"
+        """
+
+    def count_tokens(self, text_to_ctokens):
+        self.text_to_ctokens = text_to_ctokens
+        tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+        tokens = tokenizer.encode(self.text_to_ctokens)
+        return len(tokens)
+
+
+    def get_highlights(self):
+        # Message to return
+        messages = [{"role": "user", "content": self.prompt}]
+        response = client.chat.completions.create(
+            model=self.model,
+            messages=messages,
+            temperature=0
+        )
+
+        self.returned_message = response.choices[0].message.content
+        return self.returned_message
+    
+    def used_tokes(self):
+        self.prompt_tokens = self.count_tokens(self.prompt)
+        self.returned_tokens =  self.count_tokens(self.returned_message)
+        self.total_tokens =  self.prompt_tokens + self.returned_tokens
+        #print("Prompt tokens:", self.count_tokens(self.prompt), "Message tokens:", self.count_tokens(self.returned_message), "Total:", self.total_tokens)
+        return self.total_tokens
+    
+    def total_cost(self):
+        """
+        Given the cost:
+        - Input: 0,50 US$ / 1M tokens
+        - Output: 1,50 US$ / 1M tokens
+        """
+        self.input_cost = self.prompt_tokens * 0.5 / 1000000 # prompt cost
+        self.output_cost = self.returned_tokens * 1.5 / 1000000 # prompt cost
+        self.total_cost = self.input_cost + self.output_cost
+        return self.total_cost
+    
 
 
 # Data frame with highlights

@@ -14,7 +14,6 @@ def load_data():
     df = pd.read_csv(DATA_FILENAME)
     
     df = df.query("Store<6") # only 5 stores
-    print(df.info())
     df["Date"] = pd.to_datetime(df['Date'], format="%Y-%m-%d")
     df["Date S F"] = df['Date'].dt.strftime("%Y-%m-%d")
     df["Highlights"].fillna("", inplace=True)
@@ -37,13 +36,13 @@ def get_weekly_highlights(data, week):
     
 
 # Get the list of available weeks
-available_weeks = [week for week in data["Date S F"].unique()][1:]#since the second week
+available_weeks = [week for week in data["Date S F"].unique()]#since the second week
 
 # Streamlit app layout
 st.title("Walmart Sales Dashboard")
 
 # Week selector
-selected_week = st.selectbox("Select Week", available_weeks)
+selected_week = st.selectbox("Select Week", available_weeks, index=10) # by default present the week 10
 
 # Calculate metrics for the selected week and the previous week
 
@@ -63,9 +62,9 @@ st.subheader("Weekly Sales Summary")
 
 col1, col2, col3 = st.columns(3)
 with col1:
-    st.metric(label="Total Sales This Week", value=f"${total_sales_current_week:,.2f}")
+    st.metric(label="Total Sales This Week", value=f"${total_sales_current_week:,.0f}")
 with col2:
-    st.metric(label="Total Sales Last Week", value=f"${total_sales_last_week:,.2f}")
+    st.metric(label="Total Sales Last Week", value=f"${total_sales_last_week:,.0f}")
 with col3:
     st.metric(label="Sales Variation (%)", value=f"{sales_variation:.2f}%")
 
@@ -88,15 +87,6 @@ plt.ylabel('Sales')
 
 st.pyplot(plt)
 
-# Sales improvement text
-#improvement_text = f"Sales {'improved' if sales_variation > 0 else 'declined'} by {abs(sales_variation):.2f}% compared to last week."
-
-
-print(selected_week)
-
-if get_weekly_highlights(data, selected_week):
-    highlights_text = get_weekly_highlights(data, selected_week)
-else:
-    highlights_text = "No additional information available."
-
+# Highlights ( this is the relevant part for this demo)
+highlights_text = get_weekly_highlights(data, selected_week)
 st.markdown(highlights_text)
