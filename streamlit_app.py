@@ -90,3 +90,6 @@ st.pyplot(plt)
 # Highlights ( this is the relevant part for this demo)
 highlights_text = get_weekly_highlights(data, selected_week)
 st.markdown(highlights_text)
+
+note = "Note: the above text was generated from raw data for the period using a prompt and the ChatGPT API (with gpt-4o-mini) to create a customized insight"
+st.markdown(note)
